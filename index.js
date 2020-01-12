@@ -57,9 +57,9 @@ app.post('/webhook', (req, res) => {
         // Get the webhook event. entry.messaging is an array, but 
         // will only ever contain one event, so we get index 0
         let webhook_event = entry.messaging[0];
-        console.log("Message :"+webhook_event);
-        console.log("Message :"+webhook_event.toString());
-        console.log("Message :"+JSON.stringify(webhook_event));
+        // console.log("Message :"+webhook_event);
+        let x = JSON.stringify(webhook_event);
+        console.log("Message :"+x.text);
         // console.log("Message :",webhook_event.text);
         
       });

@@ -12,10 +12,12 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.get('/', (req, res)=>{
+    console.log("Dhukcey 1");
     res.send("Hello World");
 });
 
 app.get('/webhook/',(req, res)=>{
+    console.log("Dhukcey 2");
     if(req.query['hub.verify_token'] === "balblabla"){
         res.send(req.query['hub.challenge']);
     }

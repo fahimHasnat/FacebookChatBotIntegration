@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.get('/', (req, res)=>{
-    console.log("Dhukcey 1");
     res.send("Hello World");
 });
 
@@ -59,6 +58,7 @@ app.post('/webhook', (req, res) => {
         // will only ever contain one event, so we get index 0
         let webhook_event = entry.messaging[0];
         console.log(webhook_event);
+        console.log("Message :",webhook_event.text);
         
       });
   

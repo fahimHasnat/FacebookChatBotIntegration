@@ -59,8 +59,8 @@ app.post('/webhook', (req, res) => {
         let webhook_event = entry.messaging[0];
         // console.log("Message :"+webhook_event);
         let x = JSON.stringify(webhook_event);
-        console.log("Message :"+x.text);
-        // console.log("Message :",webhook_event.text);
+        console.log(typeof webhook_event);
+        console.log("Message :",webhook_event,webhook_event.body);
         
       });
   

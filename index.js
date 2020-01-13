@@ -60,10 +60,10 @@ app.post('/webhook', (req, res) => {
         // will only ever contain one event, so we get index 0
         let webhook_event = entry.messaging[0];
         // console.log("Message :"+webhook_event);
-        let sender = webhook_event.sender.id;
+        // let sender = webhook_event.sender.id;
         // console.log(typeof webhook_event);
         console.log("Message :",webhook_event);
-        console.log("Message :",webhook_event.message.text);
+        // console.log("Message :",webhook_event.message.text);
         // sendText(sender, "Welcome to v2");
       });
   

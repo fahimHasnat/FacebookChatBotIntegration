@@ -15,6 +15,8 @@ app.get('/', (req, res)=>{
     res.send("Hello World");
 });
 
+var tokenz = "EAAGoJNLqhtwBAJCMxZABZA9dW7aHo4GlV4cRddnSFy7ird83fZBS6GtSBvAfAPfCvHtifQUzVx49GkGJ06SNEsWTmoyMkVWVT5iHTwZC5L2uPJZCTNYC1TZAU1Pb4KHgqqek80Qf65RJchd3fAt8zPGRFJVOk7w0XC8WeDZB4kW6AZDZD"
+
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
 
@@ -58,10 +60,10 @@ app.post('/webhook', (req, res) => {
         // will only ever contain one event, so we get index 0
         let webhook_event = entry.messaging[0];
         // console.log("Message :"+webhook_event);
-        let x = JSON.stringify(webhook_event);
-        console.log(typeof webhook_event);
-        console.log("Message :",webhook_event.message);
-        
+        let sender = webhook_event.sender.id;
+        // console.log(typeof webhook_event);
+        console.log("Message :",webhook_event.message.text);
+        sendText(sender, "Hello World");
       });
   
       // Return a '200 OK' response to all events
@@ -73,6 +75,24 @@ app.post('/webhook', (req, res) => {
     }
   
   });
+
+  function sendText(sender, text) {
+    request({
+      url: "https://graph.facebook.com/v2.6/me/messages",
+      qs: {access_token, tokenz},
+      method: "POST",
+      json: {
+        receipt: {id: sender},
+        message: {text: text}
+      }
+    }, function(error, res, body) {
+      if(error){
+        console.log("sending error");
+      } else if(res.body.error){
+        console.log("Response body error");
+      }
+    })
+  }
 app.listen(app.get('port'),()=>{
     console.log('Server is listening');
 });

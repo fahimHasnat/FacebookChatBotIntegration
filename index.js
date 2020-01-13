@@ -62,7 +62,7 @@ app.post('/webhook', (req, res) => {
         // console.log("Message :"+webhook_event);
         let sender = webhook_event.sender.id;
         // console.log(typeof webhook_event);
-        console.log("Message :",webhook_event.message);
+        console.log("Message :",webhook_event);
         console.log("Message :",webhook_event.message.text);
         sendText(sender, "Welcome to v2");
       });

@@ -63,7 +63,7 @@ app.post('/webhook', (req, res) => {
         let sender = webhook_event.sender.id;
         // console.log(typeof webhook_event);
         console.log("Message :",webhook_event.message.text);
-        sendText(sender, "Hello World");
+        sendText(sender, "Welcome to v2");
       });
   
       // Return a '200 OK' response to all events

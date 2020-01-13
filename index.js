@@ -61,10 +61,12 @@ app.post('/webhook', (req, res) => {
         let webhook_event = entry.messaging[0];
         // console.log("Message :"+webhook_event);
         // let sender = webhook_event.sender.id;
-        // console.log(typeof webhook_event);
-        console.log("Message :",webhook_event);
+        let sender_psid = webhook_event.sender.id;
+
+        console.log("Message :",entry);
         // console.log("Message :",webhook_event.message.text);
         // sendText(sender, "Welcome to v2");
+        handleMessage(sender_psid, webhook_event.message);
       });
   
       // Return a '200 OK' response to all events
@@ -77,23 +79,70 @@ app.post('/webhook', (req, res) => {
   
   });
 
-  function sendText(sender, text) {
+  // function sendText(sender, text) {
+  //   request({
+  //     url: "https://graph.facebook.com/v2.6/me/messages",
+  //     qs: {"access_token": tokenz},
+  //     method: "POST",
+  //     json: {
+  //       receipt: {id: sender},
+  //       message: {text: text}
+  //     }
+  //   }, function(error, res, body) {
+  //     if(error){
+  //       console.log("sending error");
+  //     } else if(res.body.error){
+  //       console.log("Response body error");
+  //     }
+  //   })
+  // }
+
+  function handleMessage(sender_psid, received_message) {
+
+    let response;
+    console.log(received_message.text);
+    // Check if the message contains text
+    if (received_message.text) {    
+  
+      // Create the payload for a basic text message
+      if (received_message.text == "Hello"){
+        response = {
+          "text": "Welcome to v2"
+        }  
+      }
+      // response = {
+      //   "text": `You sent the message: "${received_message.text}". Now send me an image!`
+      // }
+    }
+    
+    // Sends the response message
+    callSendAPI(sender_psid, response);    
+  };
+
+  function callSendAPI(sender_psid, response) {
+    // Construct the message body
+    let request_body = {
+      "recipient": {
+        "id": sender_psid
+      },
+      "message": response
+    }
+  
+    // Send the HTTP request to the Messenger Platform
     request({
-      url: "https://graph.facebook.com/v2.6/me/messages",
-      qs: {access_token, tokenz},
-      method: "POST",
-      json: {
-        receipt: {id: sender},
-        message: {text: text}
+      "uri": "https://graph.facebook.com/v2.6/me/messages",
+      "qs": { "access_token": tokenz },
+      "method": "POST",
+      "json": request_body
+    }, (err, res, body) => {
+      if (!err) {
+        console.log('message sent!')
+      } else {
+        console.error("Unable to send message:" + err);
       }
-    }, function(error, res, body) {
-      if(error){
-        console.log("sending error");
-      } else if(res.body.error){
-        console.log("Response body error");
-      }
-    })
-  }
+    }); 
+  };
+
 app.listen(app.get('port'),()=>{
     console.log('Server is listening');
 });

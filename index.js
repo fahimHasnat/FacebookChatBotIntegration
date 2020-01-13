@@ -64,7 +64,7 @@ app.post('/webhook', (req, res) => {
         // console.log(typeof webhook_event);
         console.log("Message :",webhook_event);
         console.log("Message :",webhook_event.message.text);
-        sendText(sender, "Welcome to v2");
+        // sendText(sender, "Welcome to v2");
       });
   
       // Return a '200 OK' response to all events

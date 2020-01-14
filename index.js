@@ -3,6 +3,7 @@
 const app = require('express')();
 const bodyParser = require('body-parser');
 const request = require('request');
+const FB = require('fb');
 
 // const app = express();
 
@@ -55,13 +56,16 @@ app.post('/webhook', (req, res) => {
       body.entry.forEach(function(entry) {
         console.log("Entry :",entry);
         let webhook_event = entry.messaging[0];
-        if('text' in webhook_event){
-          console.log(true);
+        let sender_psid = webhook_event.sender.id;
+        if('postback' in webhook_event){
+          console.log(webhook_event.postback);
+          handlePostback(sender_psid, webhook_event.postback);
+        }else if('message' in webhook_event){
+          console.log(webhook_event.message);
+          handleMessage(sender_psid, webhook_event.message);
         }
 
-        let sender_psid = webhook_event.sender.id;
-        console.log(webhook_event.message);
-        handleMessage(sender_psid, webhook_event.message);
+        
       });
   
       // Return a '200 OK' response to all events
@@ -75,11 +79,12 @@ app.post('/webhook', (req, res) => {
   });
 
   function handleMessage(sender_psid, received_message) {
-
-    let response;
+    getName(sender_psid).then(name=>{
+      console.log("name :",name);
+      let response;
     // containerObject= JSON.parse(received_message);
     // Check if the message contains text
-    if (received_message.text) {  
+    if (received_message.text) {
       // Create the payload for a basic text message
       if (received_message.text == "Hello"){
         response = {
@@ -87,7 +92,7 @@ app.post('/webhook', (req, res) => {
               "type":"template",
               "payload":{
                 "template_type":"button",
-                "text":"What do you want to do next?",
+                "text":`Hello ${name} What do you want to do next?`,
                 "buttons":[
                   {
                     "type": "postback",
@@ -105,10 +110,92 @@ app.post('/webhook', (req, res) => {
         }
       }
     }
+    // Sends the response message
+    callSendAPI(sender_psid, response);  
+    })
+  };
+
+  function getName(sender_psid) {
+    return new Promise((resolve, reject)=>{
+      FB.options({
+        appId: '466351087584988',
+        appSecret: '061bd7aea147363d6a0fafe29703583f',
+        default_graph_version : 'v5.0',
+      });
+  
+      FB.api(
+        `/${sender_psid}/`,{access_token: `${tokenz}`},
+        function (response) {
+          if (response && !response.error) {
+            resolve(response.first_name);
+            /* handle the result */
+          } else{
+            reject(response.error);
+          }
+        }
+      );
+    })
+  }
+
+  function handlePostback(sender_psid, received_message) {
+
+    let response;
+    // containerObject= JSON.parse(received_message);
+    // Check if the message contains text
+    if (received_message.payload) {
+      // Create the payload for a basic text message
+      if (received_message.payload == "Read Story"){
+        response = {
+            "attachment":{
+              "type":"template",
+              "payload":{
+                "template_type":"button",
+                "text":"What do you want to do next?",
+                "buttons":[
+                  {
+                    "type": "postback",
+                    "title": "The Midas Touch",
+                    "payload": "The Midas Touch"
+                  },
+                  {
+                    "type": "postback",
+                    "title": "The Golden Egg",
+                    "payload": "The Golden Egg"
+                  }
+                ]
+              }
+            }
+        }
+      }
+      if(received_message.payload == "Read News"){
+        response = {
+          "attachment":{
+            "type":"template",
+            "payload":{
+              "template_type":"button",
+              "text":"What do you want to do next?",
+              "buttons":[
+                {
+                  "type": "postback",
+                  "title": "Work to expand export to Middle East countries",
+                  "payload": "Work to expand export to Middle East countries"
+                },
+                {
+                  "type": "postback",
+                  "title": "Israel’s left-wing parties unite ahead of elections",
+                  "payload": "Israel’s left-wing parties unite ahead of elections"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
     
     // Sends the response message
     callSendAPI(sender_psid, response);    
   };
+  
 
   function callSendAPI(sender_psid, response) {
     // Construct the message body

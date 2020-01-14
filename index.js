@@ -15,7 +15,7 @@ app.get('/', (req, res)=>{
     res.send("Hello World");
 });
 
-var tokenz = "EAAGoJNLqhtwBAJCMxZABZA9dW7aHo4GlV4cRddnSFy7ird83fZBS6GtSBvAfAPfCvHtifQUzVx49GkGJ06SNEsWTmoyMkVWVT5iHTwZC5L2uPJZCTNYC1TZAU1Pb4KHgqqek80Qf65RJchd3fAt8zPGRFJVOk7w0XC8WeDZB4kW6AZDZD"
+var tokenz = "EAAGoJNLqhtwBABKsNQtrreqtVLlSkTJJZCoWV5UuZAZCeaOF5Kzunb86EcNEvd8kUnMD2JPZBvnS6wCSkCfpFGeYkrQ3DzHt8oGafHIyym5Q3MurKR49UZB7pNkO2MBzWPafOeYAgfwLBZBxoVTjPZCFl3Ex2BZAgDA0mYhZB4AQoQwZDZD"
 
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
@@ -45,27 +45,19 @@ app.get('/webhook', (req, res) => {
     }
   });
 
-app.post('/webhook', (req, res) => {  
+app.post('/webhook', (req, res) => {
 
     // Parse the request body from the POST
     let body = req.body;
   
-    // Check the webhook event is from a Page subscription
     if (body.object === 'page') {
-  
-      // Iterate over each entry - there may be multiple if batched
+
       body.entry.forEach(function(entry) {
-  
-        // Get the webhook event. entry.messaging is an array, but 
-        // will only ever contain one event, so we get index 0
         let webhook_event = entry.messaging[0];
-        // console.log("Message :"+webhook_event);
-        // let sender = webhook_event.sender.id;
+        console.log(JSON.stringify(webhook_event))
+
         let sender_psid = webhook_event.sender.id;
 
-        console.log("Message :",entry);
-        // console.log("Message :",webhook_event.message.text);
-        // sendText(sender, "Welcome to v2");
         handleMessage(sender_psid, webhook_event.message);
       });
   
@@ -79,40 +71,36 @@ app.post('/webhook', (req, res) => {
   
   });
 
-  // function sendText(sender, text) {
-  //   request({
-  //     url: "https://graph.facebook.com/v2.6/me/messages",
-  //     qs: {"access_token": tokenz},
-  //     method: "POST",
-  //     json: {
-  //       receipt: {id: sender},
-  //       message: {text: text}
-  //     }
-  //   }, function(error, res, body) {
-  //     if(error){
-  //       console.log("sending error");
-  //     } else if(res.body.error){
-  //       console.log("Response body error");
-  //     }
-  //   })
-  // }
-
   function handleMessage(sender_psid, received_message) {
 
     let response;
-    console.log(received_message.text);
+    containerObject= JSON.parse(received_message);
     // Check if the message contains text
-    if (received_message.text) {    
-  
+    if (containerObject.has('text')) {    
       // Create the payload for a basic text message
       if (received_message.text == "Hello"){
         response = {
-          "text": "Welcome to v2"
-        }  
+            "attachment":{
+              "type":"template",
+              "payload":{
+                "template_type":"button",
+                "text":"What do you want to do next?",
+                "buttons":[
+                  {
+                    "type": "postback",
+                    "title": "Read News",
+                    "payload": "Read News"
+                  },
+                  {
+                    "type": "postback",
+                    "title": "Read Story",
+                    "payload": "Read Story"
+                  }
+                ]
+              }
+            }
+        }
       }
-      // response = {
-      //   "text": `You sent the message: "${received_message.text}". Now send me an image!`
-      // }
     }
     
     // Sends the response message

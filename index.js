@@ -79,7 +79,7 @@ app.post('/webhook', (req, res) => {
     let response;
     containerObject= JSON.parse(received_message);
     // Check if the message contains text
-    if (containerObject.has('text')) {    
+    if (received_message.text) {  
       // Create the payload for a basic text message
       if (received_message.text == "Hello"){
         response = {

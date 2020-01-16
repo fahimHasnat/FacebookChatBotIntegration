@@ -47,71 +47,128 @@ app.get('/webhook', (req, res) => {
   });
 
 app.post('/webhook', (req, res) => {
-
-    // Parse the request body from the POST
     let body = req.body;
   
     if (body.object === 'page') {
-
       body.entry.forEach(function(entry) {
+
         console.log("Entry :",entry);
         let webhook_event = entry.messaging[0];
         let sender_psid = webhook_event.sender.id;
+
         if('postback' in webhook_event){
           console.log(webhook_event.postback);
           handlePostback(sender_psid, webhook_event.postback);
-        }else if('message' in webhook_event){
+        }
+
+        else if('message' in webhook_event){
           console.log(webhook_event.message);
           handleMessage(sender_psid, webhook_event.message);
         }
-
         
       });
-  
-      // Return a '200 OK' response to all events
       res.status(200).send('EVENT_RECEIVED');
-  
-    } else {
-      // Return a '404 Not Found' if event is not from a page subscription
+    } 
+    else {
       res.sendStatus(404);
     }
   
   });
 
   function handleMessage(sender_psid, received_message) {
+    console.log("DHUkcey");
     getName(sender_psid).then(name=>{
       console.log("name :",name);
       let response;
-    // containerObject= JSON.parse(received_message);
-    // Check if the message contains text
-    if (received_message.text) {
-      // Create the payload for a basic text message
-      if (received_message.text == "Hello"){
-        response = {
+      if (received_message.text) {
+
+        if (received_message.text == "Hello"){
+          response = {
+              "attachment":{
+                "type":"template",
+                "payload":{
+                  "template_type":"button",
+                  "text":`Hello ${name} What do you want to do next?`,
+                  "buttons":[
+                    {
+                      "type": "postback",
+                      "title": "Read News",
+                      "payload": "Read News"
+                    },
+                    {
+                      "type": "postback",
+                      "title": "Read Story",
+                      "payload": "Read Story"
+                    }
+                  ]
+                }
+              }
+          }
+        }
+        if (received_message.text == "Hi"){
+          response = {
+            "text": "Which color do you like ?",
+            "quick_replies":[
+              {
+                "content_type": "text",
+                "title": "Red ",
+                "payload":"Red",
+                "image_url": "https://usercontent2.hubstatic.com/7197541_f1024.jpg"
+              },
+              {
+                "content_type": "text",
+                "title": "Green",
+                "payload":"Green",
+                "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/de/Color-Green.JPG"
+              },
+              {
+                "content_type": "text",
+                "title": "Blue",
+                "payload":"Blue",
+                "image_url": "https://miro.medium.com/max/512/1*7uObADW_J1O5UMyyoVwLTg.png"
+              }
+            ]
+          }
+        }
+        if (received_message.text == "call"){
+          response = {
             "attachment":{
               "type":"template",
               "payload":{
                 "template_type":"button",
-                "text":`Hello ${name} What do you want to do next?`,
+                "text":"Need further assistance? Talk to a representative",
                 "buttons":[
                   {
-                    "type": "postback",
-                    "title": "Read News",
-                    "payload": "Read News"
-                  },
-                  {
-                    "type": "postback",
-                    "title": "Read Story",
-                    "payload": "Read Story"
+                    "type":"phone_number",
+                    "title":"+15105551234",
+                    "payload":"+15105551234"
                   }
                 ]
               }
             }
+          }
+        }
+        if (received_message.text == "share"){
+          response = {
+            "attachment":{
+              "type":"template",
+              "payload":{
+                "template_type":"button",
+                "text":"Need further assistance? Talk to a representative",
+                "buttons":[
+                  {
+                    "type":"phone_number",
+                    "title":"+15105551234",
+                    "payload":"+15105551234"
+                  }
+                ]
+              }
+            }
+          }
         }
       }
-    }
-    // Sends the response message
-    callSendAPI(sender_psid, response);  
+
+      callSendAPI(sender_psid, response);  
     })
   };
 
@@ -128,13 +185,12 @@ app.post('/webhook', (req, res) => {
         function (response) {
           if (response && !response.error) {
             resolve(response.first_name);
-            /* handle the result */
           } else{
             reject(response.error);
           }
         }
       );
-    })
+    });
   }
 
   function handlePostback(sender_psid, received_message) {
@@ -168,6 +224,7 @@ app.post('/webhook', (req, res) => {
         }
       }
       if(received_message.payload == "Read News"){
+        
         response = {
           "attachment":{
             "type":"template",

@@ -4,7 +4,7 @@ const app = require('express')();
 const bodyParser = require('body-parser');
 const request = require('request');
 const FB = require('fb');
-
+const divide = require("./controller/divideTheWork");
 // const app = express();
 
 app.set('port', (process.env.PORT || 5000));
@@ -48,13 +48,14 @@ app.get('/webhook', (req, res) => {
 
 app.post('/webhook', (req, res) => {
     let body = req.body;
+    console.log("body :",body);
   
     if (body.object === 'page') {
       body.entry.forEach(function(entry) {
 
-        console.log("Entry :",entry);
         let webhook_event = entry.messaging[0];
-        let sender_psid = webhook_event.sender.id;
+        // let sender_psid = webhook_event.sender.id;
+        let sender_psid = 45678;
 
         if('postback' in webhook_event){
           console.log(webhook_event.postback);
@@ -63,6 +64,7 @@ app.post('/webhook', (req, res) => {
 
         else if('message' in webhook_event){
           console.log(webhook_event.message);
+          divide.type(sender_psid, webhook_event.message);
           handleMessage(sender_psid, webhook_event.message);
         }
         
@@ -83,26 +85,29 @@ app.post('/webhook', (req, res) => {
       if (received_message.text) {
 
         if (received_message.text == "Hello"){
+          // response = {
+          //     "attachment":{
+          //       "type":"template",
+          //       "payload":{
+          //         "template_type":"button",
+          //         "text":`Hello ${name} What do you want to do next?`,
+          //         "buttons":[
+          //           {
+          //             "type": "postback",
+          //             "title": "Read News",
+          //             "payload": "Read News"
+          //           },
+          //           {
+          //             "type": "postback",
+          //             "title": "Read Story",
+          //             "payload": "Read Story"
+          //           }
+          //         ]
+          //       }
+          //     }
+          // }
           response = {
-              "attachment":{
-                "type":"template",
-                "payload":{
-                  "template_type":"button",
-                  "text":`Hello ${name} What do you want to do next?`,
-                  "buttons":[
-                    {
-                      "type": "postback",
-                      "title": "Read News",
-                      "payload": "Read News"
-                    },
-                    {
-                      "type": "postback",
-                      "title": "Read Story",
-                      "payload": "Read Story"
-                    }
-                  ]
-                }
-              }
+            "text":`Hello ${name} What do you want to do next?`
           }
         }
         if (received_message.text == "Hi"){
@@ -148,18 +153,54 @@ app.post('/webhook', (req, res) => {
             }
           }
         }
-        if (received_message.text == "share"){
+        if (received_message.text == "generic"){
           response = {
             "attachment":{
               "type":"template",
               "payload":{
-                "template_type":"button",
-                "text":"Need further assistance? Talk to a representative",
-                "buttons":[
+                "template_type":"generic",
+                "elements":[
+                   {
+                    "title":"RulMaker",
+                    "image_url":"https://rulmaker.com/wp-content/uploads/2019/12/Wed-banner-1-min.jpg",
+                    "subtitle":"We have the right dress for everyone.",
+                    "default_action": {
+                      "type": "web_url",
+                      "url": "https://rulmaker.com",
+                      "webview_height_ratio": "tall",
+                    },
+                    "buttons":[
+                      {
+                        "type":"web_url",
+                        "url":"https://rulmaker.com/",
+                        "title":"View Website"
+                      },{
+                        "type":"postback",
+                        "title":"Start Chatting",
+                        "payload":"Start Chatting"
+                      }              
+                    ]      
+                  },
                   {
-                    "type":"phone_number",
-                    "title":"+15105551234",
-                    "payload":"+15105551234"
+                    "title":"Welcome",
+                    "image_url":"https://rulmaker.com/wp-content/uploads/2019/12/Wed-banner-1-min.jpg",
+                    "subtitle":"We have the right dress for everyone.",
+                    "default_action": {
+                      "type": "web_url",
+                      "url": "https://rulmaker.com",
+                      "webview_height_ratio": "tall",
+                    },
+                    "buttons":[
+                      {
+                        "type":"web_url",
+                        "url":"https://rulmaker.com/",
+                        "title":"View Website"
+                      },{
+                        "type":"postback",
+                        "title":"Start Chatting",
+                        "payload":"Start Chatting"
+                      }              
+                    ]      
                   }
                 ]
               }

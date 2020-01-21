@@ -1,29 +1,22 @@
-module.exports ={
-  handleMessage : function(sender_psid, received_message){
-    let response;
-          if (received_message.text == "Hello"){
-            response = {
-                "attachment":{
-                  "type":"template",
-                  "payload":{
-                    "template_type":"button",
-                    "text":`Hello, What do you want to do next?`,
-                    "buttons":[
-                      {
-                        "type": "postback",
-                        "title": "Read News",
-                        "payload": "Read News"
-                      },
-                      {
-                        "type": "postback",
-                        "title": "Read Story",
-                        "payload": "Read Story"
-                      }
-                    ]
-                  }
-                }
+const Response = require("../models/response");
+
+module.exports = {
+  handleMessage: function (sender_psid, received_message) {
+    return new Promise((resolve, reject)=>{
+      Response.find({type: "text"})
+        .select("response")
+        .exec()
+        .then(result => {
+          // console.log(result[0].response.length);
+          for(let i = 0;i<result[0].response.length; i++){
+            if(result[0].response[i].key === received_message.text){
+              response = {"text" : result[0].response[i].value};
+              resolve(response);
             }
           }
-          return response;
+        }).catch(err => {
+          console.log("Get error :", err);
+        });
+      });
   }
-}; 
+};

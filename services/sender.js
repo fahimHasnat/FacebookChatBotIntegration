@@ -1,4 +1,8 @@
-function callSendAPI(sender_psid, response) {
+const request = require('request');
+var tokenz = "EAAGoJNLqhtwBABKsNQtrreqtVLlSkTJJZCoWV5UuZAZCeaOF5Kzunb86EcNEvd8kUnMD2JPZBvnS6wCSkCfpFGeYkrQ3DzHt8oGafHIyym5Q3MurKR49UZB7pNkO2MBzWPafOeYAgfwLBZBxoVTjPZCFl3Ex2BZAgDA0mYhZB4AQoQwZDZD"
+module.exports = {
+   send : function(sender_psid, response) {
+     console.log("sender response :", response);
     // Construct the message body
     let request_body = {
       "recipient": {
@@ -6,6 +10,7 @@ function callSendAPI(sender_psid, response) {
       },
       "message": response
     }
+    console.log("Request body lol :", request_body);
   
     // Send the HTTP request to the Messenger Platform
     request({
@@ -20,4 +25,5 @@ function callSendAPI(sender_psid, response) {
         console.error("Unable to send message:" + err);
       }
     }); 
-  };
+   }
+}

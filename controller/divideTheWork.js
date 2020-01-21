@@ -1,16 +1,18 @@
 const handleText = require('../services/handleText');
+const sender = require("../services/sender");
 
 module.exports = class dividethework {
 
-    static type = (sender_psid, received_message) => {
-        console.log("dividethework :",sender_psid, received_message);
-        let response =  handleText.handleMessage(sender_psid, received_message);
-        console.log(response.attachment);
-        // if(data.type == "text"){
-        //     handleText.handleMessage(data.sender_psid, data.received_message)
-        // }
-    }
-    
+  static type = (sender_psid, received_message) => {
+    // console.log("dividethework :",sender_psid, received_message);
+    handleText.handleMessage(sender_psid, received_message).then(response => {
+      console.log("dividethework :", response);
+      sender.send(sender_psid, response);
+    })
+    // if(data.type == "text"){
+    //     handleText.handleMessage(data.sender_psid, data.received_message)
+    // }
+  }
 };
 
 /*

@@ -6,7 +6,8 @@ const responseSchema = new Schema({
     type: {type: String, required: true},
     response: [{
         key: {type: String, required: true},
-        value: {type: String, required: true}
+        value: {type: String, required: true},
+        payload:{type: String}
     }]
 });
 

@@ -1,3 +1,4 @@
+let Search = require('search-json');
 var family = {
     "Smiths": {
         "Jonathan Smith": { "id": 0 },
@@ -16,14 +17,14 @@ var family = {
 var responses = {
     "Get Started": { id: 0, referred_to: {goto:"Forwardings", id:1}, type: "text", text: "Hello Sir/madam, Good Morning" },
     "Forwardings": [{
-        id: 1, referred_by: 0, type: "button", text: "How can I help you?",
+        id: 1, referred_by: 0, referred_to: {}, type: "button", text: "How can I help you?",
         buttons: [{
             id: 2,
-            referred_to: 5,
+            referred_to: {goto:"Buttons",id:5},
             referred_by: 0,
             "type": "postback",
             "title": "Men's Clothing",
-            "payload": "Men's Clothing"
+            "payload": `Buttons+5`
         },
         {
             id: 3,
@@ -66,11 +67,11 @@ var responses = {
         id: 5, referred_by: 2, text: "What do you want to buy?", buttons: [
             {
                 id: 8,
-                referred_to: 14,
+                referred_to: {goto:"Generics",id:14},
                 referred_by: 2,
                 "type": "postback",
                 "title": "Jeans",
-                "payload": "Jeans"
+                "payload": "Generics+14"
             },
             {
                 id: 9,
@@ -215,14 +216,77 @@ var responses = {
 }
 
 var input = process.argv[2];
+if(input === "Get Started"){
+    forGetStarted(input);
+    
+} else {
+    let temp = input.split("+");
+    x = { goto: temp[0], id: temp[1] }
+    gateway(x);
+}
 
-for(key in responses){
-    // var k = {goto: "Forwardings", id:1};
-    console.log(key);
+// console.log(responses["Get Started"]);
+function forGetStarted(input){
+    for(key in responses){
+        // var k = {goto: "Forwardings", id:1};
+        if(key === input){
+            if(responses[key].type === "text"){
+                // console.log(responses[key]);
+                console.log(`text : ${responses[key].text}`);
+                if(responses[key].referred_to.goto === "Forwardings"){
+                    forwardings(responses[key].referred_to.goto, responses[key].referred_to.id);
+                }
+            }
+        }
+    }
+}
+
+function gateway(input){
+    for(key in responses){
+        // console.log(input.goto);
+        if(key === input.goto){
+            if(responses[key].type === "generic"){
+                // console.log(responses[key]);
+                console.log(`text : ${responses[key].text}`);
+                if(responses[key].referred_to.goto === "Forwardings"){
+                    forwardings(responses[key].referred_to.goto, responses[key].referred_to.id);
+                }
+            }
+        }
+    }
 }
 
 
+function checkType(item){
+    return new Promise((resolve, reject)=>{
+        if(item.type == "button"){
+            let result = item.buttons;
+            for(let i = 0; i<result.length; i++){
+                delete result[i].id;
+                delete result[i].referred_to;
+                delete result[i].referred_by;
+            }
+            console.log(result);
+            resolve(item);
+        }
+    });
+}
 
+function forwardings(goto, id){
+    for(key in responses){
+        if(key === goto){
+            for(item in responses[key]){
+                if(responses[key][item].id === id){
+                    checkType(responses[key][item]).then(item=>{
+                        if(item.referred_to.goto === "Forwardings"){
+                            forwardings(item.referred_to.goto, item.referred_to.id);
+                        }
+                    });
+                }
+            }
+        }
+    }
+}
 
 
 

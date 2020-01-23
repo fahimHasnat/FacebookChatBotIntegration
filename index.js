@@ -21,7 +21,7 @@ mongoose.connect("mongodb+srv://fahim:chatbot@cluster0-dhadz.mongodb.net/test?re
   }).catch((err) => {
     console.log("Mongoose connection error :", err);
   });
-
+mongoose.set('useFindAndModify', false);
 app.set('port', (process.env.PORT || 5000));
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -120,10 +120,16 @@ app.post("/create", (req, res) => {
     type: "text",
     response: [{
       key: "Hello",
-      value: "Hello there my freind"
+      value: "Hello there my freind",
+      payload: "text file"
     }]
   })
-  response.save().then(() => {
+  response.save().then((result) => {
+    result.response[0].payload = `${result.response[0].value}+${result._id}`;
+    console.log(result);
+    Response.findByIdAndUpdate(result._id, result).exec().then(()=>{
+      console.log("Updated");
+    })
     res.status(200).json({
       message: "resullt saved"
     })

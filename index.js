@@ -76,9 +76,9 @@ app.get('/webhook', (req, res) => {
 
 app.post('/webhook', (req, res) => {
   let body = req.body;
-  // console.log("body :",body);
-  // const incomingMessages = messageParser.parsePayload(req.body);
-  // console.log("incomingMessages :",incomingMessages);
+  console.log("body :", JSON.stringify(body));
+  const incomingMessages = messageParser.parsePayload(req.body);
+  console.log("incomingMessages :", incomingMessages);
 
   if (body.object === 'page') {
     body.entry.forEach(function (entry) {
@@ -94,16 +94,17 @@ app.post('/webhook', (req, res) => {
         })
         .catch((err) => console.log(err));
 
-      if ('postback' in webhook_event) {
-        console.log(webhook_event.postback);
-        handlePostback(sender_psid, webhook_event.postback);
-      }
+      divide.type(sender_psid, webhook_event);
 
-      else if ('message' in webhook_event) {
-        console.log(webhook_event.message);
-        // divide.type(sender_psid, webhook_event.message);
-        handleMessage(sender_psid, webhook_event.message);
-      }
+      // if ('postback' in webhook_event) {
+      //   console.log(webhook_event.postback);
+      //   handlePostback(sender_psid, webhook_event.postback);
+      // }
+
+      // else if ('message' in webhook_event) {
+      //   console.log(webhook_event.message);
+      //   handleMessage(sender_psid, webhook_event.message);
+      // }
 
     });
     res.status(200).send('EVENT_RECEIVED');
@@ -127,7 +128,7 @@ app.post("/create", (req, res) => {
   response.save().then((result) => {
     result.response[0].payload = `${result.response[0].value}+${result._id}`;
     console.log(result);
-    Response.findByIdAndUpdate(result._id, result).exec().then(()=>{
+    Response.findByIdAndUpdate(result._id, result).exec().then(() => {
       console.log("Updated");
     })
     res.status(200).json({
@@ -144,7 +145,19 @@ function handleMessage(sender_psid, received_message) {
     if (received_message.text) {
 
       if (received_message.text == "Hello") {
-
+        messageClient.sendButtonsMessage(sender_psid, `Hello ${name} What do you want to do next?`, [{
+          "type": "postback",
+          "title": "Read News",
+          "payload": `Read News`
+        },
+        {
+          "type": "postback",
+          "title": "Read Story",
+          "payload": "Read Story"
+        }
+        ]).then(() => {
+          console.log("Sent");
+        })
         // response = {
         //     "attachment":{
         //       "type":"template",
@@ -177,20 +190,7 @@ function handleMessage(sender_psid, received_message) {
         //   "title": "Red ",
         //   "payload":"Red",
         //   "image_url": "https://usercontent2.hubstatic.com/7197541_f1024.jpg"}]);
-        var x = 12;
-        messageClient.sendButtonsMessage(sender_psid, `Hello ${name} What do you want to do next?`,[{
-          "type": "postback",
-          "title": "Read News",
-          "payload": `Read News+${x}`
-        },
-        {
-          "type": "postback",
-          "title": "Read Story",
-          "payload": "Read Story"
-        }
-        ]).then(() => {
-          console.log("Sent");
-        })
+        // var x = 12;
       }
       if (received_message.text == "Hi") {
         response = {
@@ -236,53 +236,53 @@ function handleMessage(sender_psid, received_message) {
         }
       }
       if (received_message.text == "generic") {
-        messageClient.sendTemplateMessage(sender_psid,
-          {
-            "template_type": "generic",
-            "elements": [
-              {
-                "title": "RulMaker",
-                "image_url": "https://rulmaker.com/wp-content/uploads/2019/12/Wed-banner-1-min.jpg",
-                "subtitle": "We have the right dress for everyone.",
-                "default_action": {
-                  "type": "postback",
-                  "title": "Start Chatting",
-                  "payload": "Start Chatting",
-                },
-                "buttons": [
-                  {
-                    "type": "web_url",
-                    "url": "https://rulmaker.com/",
-                    "title": "View Website"
-                  }, {
-                    "type": "postback",
-                    "title": "Start Chatting",
-                    "payload": "Start Chatting"
-                  }
-                ]
-              },
-              {
-                "title": "Welcome",
-                "image_url": "https://rulmaker.com/wp-content/uploads/2019/12/Wed-banner-1-min.jpg",
-                "subtitle": "We have the right dress for everyone.",
-                "default_action": {
-                  "type": "web_url",
-                  "url": "https://rulmaker.com",
-                  "webview_height_ratio": "tall",
-                },
-                "buttons": [
-                  {
-                    "type": "web_url",
-                    "url": "https://rulmaker.com/",
-                    "title": "View Website"
-                  }, {
-                    "type": "postback",
-                    "title": "Start Chatting",
-                    "payload": "Start Chatting"
-                  }
-                ]
-              }]
-          });
+        // messageClient.sendTemplateMessage(sender_psid,
+        //   {
+        //     "template_type": "generic",
+        //     "elements": [
+        //       {
+        //         "title": "RulMaker",
+        //         "image_url": "https://rulmaker.com/wp-content/uploads/2019/12/Wed-banner-1-min.jpg",
+        //         "subtitle": "We have the right dress for everyone.",
+        //         "default_action": {
+        //           "type": "postback",
+        //           "title": "Start Chatting",
+        //           "payload": "Start Chatting",
+        //         },
+        //         "buttons": [
+        //           {
+        //             "type": "web_url",
+        //             "url": "https://rulmaker.com/",
+        //             "title": "View Website"
+        //           }, {
+        //             "type": "postback",
+        //             "title": "Start Chatting",
+        //             "payload": "Start Chatting"
+        //           }
+        //         ]
+        //       },
+        //       {
+        //         "title": "Welcome",
+        //         "image_url": "https://rulmaker.com/wp-content/uploads/2019/12/Wed-banner-1-min.jpg",
+        //         "subtitle": "We have the right dress for everyone.",
+        //         "default_action": {
+        //           "type": "web_url",
+        //           "url": "https://rulmaker.com",
+        //           "webview_height_ratio": "tall",
+        //         },
+        //         "buttons": [
+        //           {
+        //             "type": "web_url",
+        //             "url": "https://rulmaker.com/",
+        //             "title": "View Website"
+        //           }, {
+        //             "type": "postback",
+        //             "title": "Start Chatting",
+        //             "payload": "Start Chatting"
+        //           }
+        //         ]
+        //       }]
+        //   });
         response = {
           "attachment": {
             "type": "template",
@@ -371,9 +371,19 @@ function handlePostback(sender_psid, received_message) {
   if (received_message.payload) {
     if (received_message.title == "Get Started") {
       messageClient.toggleTyping(sender_psid, true).then(() => {
-        messageClient.sendTextMessage(sender_psid, "Welcome to v2").then(() => {
+        messageClient.sendButtonsMessage(sender_psid, `Hello, What do you want to do next?`, [{
+          "type": "postback",
+          "title": "Read News",
+          "payload": `Read News`
+        },
+        {
+          "type": "postback",
+          "title": "Read Story",
+          "payload": "Read Story"
+        }
+        ]).then(() => {
           messageClient.toggleTyping(sender_psid, false);
-        })
+        });
       })
     }
     // Create the payload for a basic text message
@@ -427,11 +437,12 @@ function handlePostback(sender_psid, received_message) {
   }
 
   // Sends the response message
-  // callSendAPI(sender_psid, response);    
+  callSendAPI(sender_psid, response);
 };
 
 
 function callSendAPI(sender_psid, response) {
+  console.log(response);
   // Construct the message body
   let request_body = {
     "recipient": {

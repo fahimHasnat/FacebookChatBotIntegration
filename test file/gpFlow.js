@@ -357,11 +357,11 @@ responses = {
         id: 100, referred_by: 97, referred_to: {}, type: "button", text: "Take your online shopping experience to a new level by exploring GP Online Shop.  For detailed information select from below options", buttons: [
             {
                 id: 101,
-                referred_to: { goto: "Texts", id: 11 },
+                referred_to: { goto: "Buttons", id: 104 },
                 referred_by: 97,
                 "type": "postback",
                 "title": "Current Offers",
-                "payload": "Current Offers"
+                "payload": "Buttons+104"
             },
             {
                 id: 102,
@@ -378,6 +378,118 @@ responses = {
                 "type": "postback",
                 "title": "Delivery Process",
                 "payload": "Delivery Process"
+            }
+        ]
+    },
+    {
+        id: 107, referred_by: 104, referred_to: {}, type: "button", text: "More", buttons: [
+            {
+                id: 108,
+                referred_to: { goto: "Generics", id: 145 },
+                referred_by: 104,
+                "type": "postback",
+                "title": "Wearables",
+                "payload": "Generics+145"
+            },
+            {
+                id: 109,
+                referred_to: { goto: "Texts", id: 37 },
+                referred_by: 104,
+                "type": "postback",
+                "title": "Modems",
+                "payload": "Modems"
+            },
+            {
+                id: 110,
+                referred_to: { goto: "Generics", id: 97 },
+                referred_by: 104,
+                "type": "postback",
+                "title": "GP Online Shop",
+                "payload": "Generics+97"
+            }
+        ]
+    },
+    {
+        id: 115, referred_by: 111, referred_to: {goto:"Forwardings", id:119}, type: "button", text: "More", buttons: [
+            {
+                id: 116,
+                referred_to: { goto: "Texts", id: 11 },
+                referred_by: 111,
+                "type": "postback",
+                "title": "Huwaei",
+                "payload": "Huwaei"
+            },
+            {
+                id: 117,
+                referred_to: { goto: "Texts", id: 37 },
+                referred_by: 111,
+                "type": "postback",
+                "title": "Symphony",
+                "payload": "Symphony"
+            },
+            {
+                id: 118,
+                referred_to: { goto: "Buttons", id: 104 },
+                referred_by: 111,
+                "type": "postback",
+                "title": "HTC",
+                "payload": "HTC"
+            }
+        ]
+    },
+    {
+        id: 119, referred_by: 115, referred_to: {goto:"Forwardings", id:124}, type: "button", text: "More", buttons: [
+            {
+                id: 120,
+                referred_to: { goto: "Texts", id: 11 },
+                referred_by: 115,
+                "type": "postback",
+                "title": "Lenovo",
+                "payload": "Lenovo"
+            },
+            {
+                id: 121,
+                referred_to: { goto: "Texts", id: 37 },
+                referred_by: 115,
+                "type": "postback",
+                "title": "LAVA",
+                "payload": "LAVA"
+            },
+            {
+                id: 123,
+                referred_to: { goto: "Buttons", id: 104 },
+                referred_by: 115,
+                "type": "postback",
+                "title": "Micromax",
+                "payload": "Micromax"
+            }
+        ]
+    },
+    {
+        id: 124, referred_by: 119, referred_to: {}, type: "button", text: "More", buttons: [
+            {
+                id: 125,
+                referred_to: { goto: "Texts", id: 11 },
+                referred_by: 119,
+                "type": "postback",
+                "title": "Walton",
+                "payload": "Walton"
+            },
+            {
+                id: 126,
+                referred_to: { goto: "Texts", id: 37 },
+                referred_by: 119,
+                "type": "postback",
+                "title": "Okapia",
+                "payload": "Okapia"
+            },
+            {
+                id: 127,
+                referred_to: { goto: "Buttons", id: 104 },
+                referred_by: 119,
+                "type": "postback",
+                "title": "Current Offers",
+                "payload": "Buttons+104"
             }
         ]
     }
@@ -503,6 +615,54 @@ responses = {
                 "type": "postback",
                 "title": "Postpaid",
                 "payload": "Generics+92"
+            }
+        ]
+    },
+    {
+        id: 104, referred_by: 101, referred_to: {goto:"Forwardings", id:107}, type:"button", text: "Please select your desired offer from below options:", buttons: [
+            {
+                id: 105,
+                referred_to: { goto: "Buttons", id: 111 },
+                referred_by: 74,
+                "type": "postback",
+                "title": "Handsets",
+                "payload": "Buttons+111"
+            },
+            {
+                id: 106,
+                referred_to: { goto: "Generics", id: 137 },
+                referred_by: 74,
+                "type": "postback",
+                "title": "Routers",
+                "payload": "Generics+137"
+            }
+        ]
+    },
+    {
+        id: 111, referred_by: 104, referred_to: {goto:"Forwardings", id:115}, type:"button", text: "Please select your desired brand from following options", buttons: [
+            {
+                id: 112,
+                referred_to: { goto: "Generics", id: 128 },
+                referred_by: 104,
+                "type": "postback",
+                "title": "Nokia",
+                "payload": "Generics+128"
+            },
+            {
+                id: 113,
+                referred_to: { goto: "Generics", id: 92 },
+                referred_by: 104,
+                "type": "postback",
+                "title": "Samsung",
+                "payload": "Samsung"
+            },
+            {
+                id: 114,
+                referred_to: { goto: "Generics", id: 92 },
+                referred_by: 104,
+                "type": "postback",
+                "title": "Xiaomi",
+                "payload": "Xiaomi"
             }
         ]
     }
@@ -706,6 +866,176 @@ responses = {
                 }
             ]
         }]
+    },{
+        id: 128, referred_by: 112, referred_to: {}, type: "generic", elements: [{
+            id: 129,
+            referred_by: 112,
+            "title": "Nokia 6",
+            "image_url": "https://cdn01.grameenphone.com/shop/sites/default/files/Grameenphone_Online_Shop_Nokia_6_Black_Featured_Front_2.png",
+            "subtitle": "TK. 22,500 . Avail attractive EMI",
+            "buttons": [
+                {
+                    id: 130,
+                    referred_by: 112,
+                    referred_to: {},
+                    "type": "web_url",
+                    "url": "https://www.grameenphone.com/shop/phones/product/nokia-6",
+                    "title": "View Details"
+                },
+                {
+                    id: 131,
+                    referred_by: 112,
+                    referred_to: { goto: "Buttons", id: 111 },
+                    "type": "postback",
+                    "title": "Handsets",
+                    "payload": "Buttons+111"
+                },
+                {
+                    id: 132,
+                    referred_by: 112,
+                    referred_to: { goto: "Texts", id: 36 },
+                    "type": "postback",
+                    "title": "Service Representative",
+                    "payload": "Texts+36"
+                }
+            ]
+        },
+        {
+            id: 133,
+            referred_by: 112,
+            "title": "Nokia 6.1",
+            "image_url": "https://cdn01.grameenphone.com/shop/sites/default/files/Nokia-6_Device_front_500x500.png",
+            "subtitle": "TK. TK.29,100 . Avail attractive EMI",
+            "buttons": [
+                {
+                    id: 134,
+                    referred_by: 112,
+                    referred_to: {},
+                    "type": "web_url",
+                    "url": "https://www.grameenphone.com/shop/phones/product/nokia-61",
+                    "title": "View Details"
+                },
+                {
+                    id: 135,
+                    referred_by: 112,
+                    referred_to: { goto: "Buttons", id: 111 },
+                    "type": "postback",
+                    "title": "Handsets",
+                    "payload": "Buttons+111"
+                },
+                {
+                    id: 136,
+                    referred_by: 112,
+                    referred_to: { goto: "Texts", id: 36 },
+                    "type": "postback",
+                    "title": "Service Representative",
+                    "payload": "Texts+36"
+                }
+            ]
+        }]
+    },
+    {
+        id: 137, referred_by: 112, referred_to: {}, type: "generic", elements: [{
+            id: 138,
+            referred_by: 112,
+            "title": "GP 3G WiFi Carfi Router",
+            "image_url": "https://cdn01.grameenphone.com/shop/sites/default/files/Modem_PNG_2.png",
+            "subtitle": "Taka 2499.",
+            "buttons": [
+                {
+                    id: 139,
+                    referred_by: 112,
+                    referred_to: {},
+                    "type": "web_url",
+                    "url": "https://www.grameenphone.com/shop/routers/product/gp-3g-wifi-carfi-router?utm_source=Digital%20Care",
+                    "title": "View Details"
+                },
+                {
+                    id: 140,
+                    referred_by: 112,
+                    referred_to: { goto: "Buttons", id: 104 },
+                    "type": "postback",
+                    "title": "Current Offers",
+                    "payload": "Buttons+104"
+                },
+                {
+                    id: 141,
+                    referred_by: 112,
+                    referred_to: { goto: "Texts", id: 36 },
+                    "type": "postback",
+                    "title": "Service Representative",
+                    "payload": "Texts+36"
+                }
+            ]
+        },
+        {
+            id: 142,
+            referred_by: 112,
+            "title": "GP 3G Pocket Router",
+            "image_url": "https://ryanscomputers.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/g/r/grameen-phone-edge.jpg",
+            "subtitle": "Taka 3945.",
+            "buttons": [
+                {
+                    id: 142,
+                    referred_by: 112,
+                    referred_to: {},
+                    "type": "web_url",
+                    "url": "https://www.grameenphone.com/shop/routers/product/gp-3g-pocket-router?utm_source=Digital%20Care",
+                    "title": "View Details"
+                },
+                {
+                    id: 143,
+                    referred_by: 112,
+                    referred_to: { goto: "Buttons", id: 104 },
+                    "type": "postback",
+                    "title": "Current Offers",
+                    "payload": "Buttons+104"
+                },
+                {
+                    id: 144,
+                    referred_by: 112,
+                    referred_to: { goto: "Texts", id: 36 },
+                    "type": "postback",
+                    "title": "Service Representative",
+                    "payload": "Texts+36"
+                }
+            ]
+        }]
+    },
+    {
+        id: 145, referred_by: 108, referred_to: {}, type: "generic", elements: [{
+            id: 138,
+            referred_by: 112,
+            "title": "Day Day Band",
+            "image_url": "https://sc01.alicdn.com/kf/HTB1sITIPVXXXXcKXXXXq6xXFXXXD/Shenzhen-New-heartrate-Smart-Bracelet-C6-Smart.jpg_350x350.jpg",
+            "subtitle": "Your Fitness Partner TK. 1599. Extra belt free.",
+            "buttons": [
+                {
+                    id: 139,
+                    referred_by: 108,
+                    referred_to: {},
+                    "type": "web_url",
+                    "url": "https://www.grameenphone.com/shop/wearables/product/day-day-band?utm_source=Digital%20care",
+                    "title": "View Details"
+                },
+                {
+                    id: 140,
+                    referred_by: 108,
+                    referred_to: { goto: "Buttons", id: 104 },
+                    "type": "postback",
+                    "title": "Current Offers",
+                    "payload": "Buttons+104"
+                },
+                {
+                    id: 141,
+                    referred_by: 108,
+                    referred_to: { goto: "Texts", id: 36 },
+                    "type": "postback",
+                    "title": "Service Representative",
+                    "payload": "Texts+36"
+                }
+            ]
+        }]
     }],
     // "QuickReplies": [{
     //     id: 18, referred_by: 16, referred_to: 22, type: "quick reply", text: "Which color do you like ?",
@@ -777,13 +1107,15 @@ responses = {
     //     type: "image",
     //     "image_url": "Red color er jeans er image url"
     // }],
-    // "KeyValue": {
-    //     "Hello": { goto: "Texts", id: 0 },
-    //     "Hi": { goto: "Texts", id: 0 },
-    //     "Assalamualikum": { goto: "Texts", id: 0 },
-    //     "Yo": { goto: "Texts", id: 0 },
-    //     "Men's Clothing": { goto: "Buttons", id: 5 }
-    // },
+    "KeyValue": {
+        "Hello": { goto: "Get Started", id: 0 },
+        "Hi": { goto: "Get Started", id: 0 },
+        "Assalamualikum": { goto: "Get Started", id: 0 },
+        "Yo": { goto: "Get Started", id: 0 },
+        "Get Started": { goto: "Get Started", id: 0 },
+        "get started": { goto: "Get Started", id: 0 },
+        "start": { goto: "Get Started", id: 0 }
+    },
     "Texts": [
         { id: 11, referred_to: { goto: "Texts", id: 12, input: true, errorGoto: "Texts", errorId: 17 }, type: "text", text: "Please enter any GP number" },
         { id: 12, referred_to: { goto: "Buttons", id: 13, input: true, errorGoto: "Texts", errorId: 18 }, type: "text", text: "Please enter an amount" },

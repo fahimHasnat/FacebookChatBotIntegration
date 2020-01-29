@@ -1,8 +1,5 @@
 const responses = require("../test file/gpFlow").getFlow;
 const checktype = require("./checkType").checkType;
-const facebook = require('fb-messenger-bot-api');
-
-const messageClient = new facebook.FacebookMessagingAPIClient(process.env.PAGE_ACCESS_TOKEN);
 
 module.exports = {
     handleGetStarted : function(sender_psid) {

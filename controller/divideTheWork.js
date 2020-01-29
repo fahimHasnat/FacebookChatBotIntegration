@@ -1,11 +1,12 @@
 // called from index.js
 // evaluate the incoming message
 
-const handleText = require('../services/handleText');
-const sender = require("../services/sender");
+// const handleText = require('../services/handleText');
+// const sender = require("../services/sender");
 const responses = require("../test file/gpFlow").getFlow;
 const handleGetStarted = require("../services/getStarted").handleGetStarted;
 const gateway = require("../services/gateway").gateway;
+const textGateway = require("../services/gateway").textGateway;
 const handleInput = require("../services/gateway").inputGateway;
 // console.log(responses);
 
@@ -38,7 +39,7 @@ module.exports = class dividethework {
         }
       }
       else if ("message" in received_message) {
-
+        await textGateway(sender_psid, received_message.message.text);
       }
     // }
 

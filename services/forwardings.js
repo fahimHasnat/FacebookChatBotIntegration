@@ -1,7 +1,8 @@
 const responses = require("../test file/gpFlow").getFlow;
 const checkType = require("./checkType").checkType;
+// const forward = require("./forwardings").forward;
 
-module.exports = {
+const functions = {
     forwardings : function(sender_psid, goto, id) {
         for (key in responses) {
             if (key === goto) {
@@ -9,7 +10,7 @@ module.exports = {
                     if (responses[key][item].id === id) {
                         checkType(sender_psid, responses[key][item]).then(item => {
                             if (item.referred_to.goto === "Forwardings") {
-                                forwardings(sender_psid, item.referred_to.goto, item.referred_to.id);
+                                functions.forwardings(sender_psid, item.referred_to.goto, item.referred_to.id);
                             }
                         });
                     }
@@ -18,3 +19,5 @@ module.exports = {
         }
     }
 }
+
+module.exports = functions;

@@ -9,12 +9,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             if (item.type == "button") {
                 let text = item.text;
-                let buttons = item.buttons;
-                for (let i = 0; i < buttons.length; i++) {
-                    delete buttons[i].id;
-                    delete buttons[i].referred_to;
-                    delete buttons[i].referred_by;
-                }
+                let buttons = JSON.parse(JSON.stringify(item.buttons, ['type', 'title', 'payload']));
                 messageClient.toggleTyping(sender_psid, true).then(() => {
                     messageClient.sendButtonsMessage(sender_psid, text, buttons).then(() => {
                         messageClient.toggleTyping(sender_psid, false);
@@ -22,18 +17,10 @@ module.exports = {
                     });
                 });    
             }
+
             if (item.type == "generic") {
                 let res = { "template_type": "generic" };
-                let result = item.elements;
-                for (let i = 0; i < result.length; i++) {
-                    delete result[i].id;
-                    delete result[i].referred_by;
-                    for (let j = 0; j < result[i].buttons.length; j++) {
-                        delete result[i].buttons[j].id;
-                        delete result[i].buttons[j].referred_by;
-                        delete result[i].buttons[j].referred_to;
-                    }
-                }
+                let result = JSON.parse(JSON.stringify(item.elements, ['title','image_url','subtitle','buttons','type', 'title', 'payload','url',]));
                 res.elements = result;
                 messageClient.toggleTyping(sender_psid, true).then(() => {
                     messageClient.sendTemplateMessage(sender_psid, res).then(() => {
@@ -41,8 +28,8 @@ module.exports = {
                         resolve(item);
                     });
                 });
-                
             }
+
             if (item.type == "quick reply") {
                 console.log(item.text);
                 let result = item.quick_replies;

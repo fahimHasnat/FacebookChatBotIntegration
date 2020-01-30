@@ -7,7 +7,7 @@ const functions = {
     gateway: function (sender_psid, input) {
         Object.keys(responses[input.goto]).forEach((item)=>{
             if (responses[input.goto][item].id == input.id) {
-                console.log("Item :", responses[input.goto][item]);
+                // console.log("Item :", responses[input.goto][item]);
                 checkType(sender_psid, responses[input.goto][item]).then(item => {
                     if (item.referred_to.goto === "Forwardings") {
                         forwardings(sender_psid, item.referred_to.goto, item.referred_to.id);

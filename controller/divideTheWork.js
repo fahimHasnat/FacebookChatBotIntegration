@@ -1,18 +1,18 @@
-// called from index.js
-// evaluate the incoming message
+/*
+created By: Fahim Hasnat
+Comapny: V2 Technologies Ltd.
+README.md
+called from index.js
+evaluate the incoming message
+*/
 
-// const handleText = require('../services/handleText');
-// const sender = require("../services/sender");
-const responses = require("../test file/gpFlow").getFlow;
 const handleGetStarted = require("../services/getStarted").handleGetStarted;
 const gateway = require("../services/gateway").gateway;
 const textGateway = require("../services/gateway").textGateway;
-const handleInput = require("../services/gateway").inputGateway;
-// console.log(responses);
 
 module.exports = class dividethework {
 
-  static type = async (sender_psid, received_message) => {
+  static type = async (responses, sender_psid, received_message) => {
 
     // if (!IsValidate) {
     //   let input = received_message.postback.payload.split("+");
@@ -24,7 +24,7 @@ module.exports = class dividethework {
     // } else {
       if ("postback" in received_message) {
         if (received_message.postback.title == "Get Started") {
-          await handleGetStarted(sender_psid);
+          await handleGetStarted(responses, sender_psid);
         } else {
           if ("postback" in received_message) {
             let input = received_message.postback.payload.split("+");
@@ -33,24 +33,14 @@ module.exports = class dividethework {
             //   IsValidate = false;
             // } else {
               let x = { goto: input[0], id: input[1] }
-              await gateway(sender_psid, x);
+              await gateway(responses, sender_psid, x);
             // }
           }
         }
       }
       else if ("message" in received_message) {
-        await textGateway(sender_psid, received_message.message.text);
+        await textGateway(responses, sender_psid, received_message.message.text);
       }
-    // }
-
-    // console.log("dividethework :",sender_psid, received_message);
-    // handleText.handleMessage(sender_psid, received_message).then(response => {
-    //   console.log("dividethework :", response);
-    //   sender.send(sender_psid, response);
-    // });
-    // if(data.type == "text"){
-    //     handleText.handleMessage(data.sender_psid, data.received_message)
-    // }
   }
 };
 

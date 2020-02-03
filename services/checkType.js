@@ -1,5 +1,5 @@
 const facebook = require('fb-messenger-bot-api');
-const dotenv = require('dotenv').config();
+require('dotenv').config();
 
 const messageClient = new facebook.FacebookMessagingAPIClient(process.env.PAGE_ACCESS_TOKEN);
 
@@ -41,11 +41,13 @@ module.exports = {
                 console.log(result);
                 resolve(item);
             }
+
             if (item.type == "image") {
                 let result = item;
                 console.log(result.image_url);
                 resolve(item);
             }
+
             if (item.type == "text") {
                 messageClient.toggleTyping(sender_psid, true).then(() => {
                     messageClient.sendTextMessage(sender_psid,item.text).then(() => {
@@ -54,6 +56,7 @@ module.exports = {
                     });
                 });
             }
+            
         });
     }
 }

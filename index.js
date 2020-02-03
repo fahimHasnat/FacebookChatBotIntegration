@@ -4,11 +4,17 @@ const app = require('express')();
 const bodyParser = require('body-parser');
 const request = require('request');
 const FB = require('fb');
-const divide = require("./controller/divideTheWork");
+const divide = require("./controller/divideTheWork").type;
 const mongoose = require("mongoose");
 const Response = require("./models/response");
 const facebook = require('fb-messenger-bot-api');
-const dotenv = require('dotenv').config();
+require('dotenv').config();
+const redis = require('redis');
+
+var client = redis.createClient();
+client.on('connect', () => {
+  console.log('connected');
+});
 
 // npm package
 const messageClient = new facebook.FacebookMessagingAPIClient(process.env.PAGE_ACCESS_TOKEN);
@@ -76,7 +82,6 @@ app.get('/webhook', (req, res) => {
 
 app.post('/webhook', (req, res) => {
   let body = req.body;
-  console.log("body :", JSON.stringify(body));
   const incomingMessages = messageParser.parsePayload(req.body);
   console.log("incomingMessages :", incomingMessages);
 
@@ -87,25 +92,21 @@ app.post('/webhook', (req, res) => {
       let sender_psid = webhook_event.sender.id;
       // let sender_psid = 2552542204801334;
 
-      profileClient.setGetStartedAction(sender_psid, { "text": "Welcome to the jungle" });
+      // profileClient.setGetStartedAction(sender_psid, { "text": "Welcome to the jungle" });
       messageClient.markSeen(sender_psid)
         .then(() => {
-          messageClient.toggleTyping(sender_psid, true);
+          client.get('GPresponse', (err, data) => {
+            if (err || data == null) {
+              getAndSave("GP").then(()=>{
+                divide(JSON.parse(data), sender_psid, webhook_event);
+              });
+            } else {
+              // console.log(JSON.parse(data));
+              divide(JSON.parse(data), sender_psid, webhook_event);
+            }
+          })
         })
         .catch((err) => console.log(err));
-
-      divide.type(sender_psid, webhook_event);
-
-      // if ('postback' in webhook_event) {
-      //   console.log(webhook_event.postback);
-      //   handlePostback(sender_psid, webhook_event.postback);
-      // }
-
-      // else if ('message' in webhook_event) {
-      //   console.log(webhook_event.message);
-      //   handleMessage(sender_psid, webhook_event.message);
-      // }
-
     });
     res.status(200).send('EVENT_RECEIVED');
   }
@@ -116,29 +117,39 @@ app.post('/webhook', (req, res) => {
 });
 
 app.post("/create", (req, res) => {
+  console.log(req.body);
+
   const response = new Response({
     _id: new mongoose.Types.ObjectId(),
-    type: "text",
-    response: [{
-      key: "Hello",
-      value: "Hello there my freind",
-      payload: "text file"
-    }]
-  })
+    name: req.body.name,
+    response: req.body.response
+  });
+
   response.save().then((result) => {
-    result.response[0].payload = `${result.response[0].value}+${result._id}`;
-    console.log(result);
-    Response.findByIdAndUpdate(result._id, result).exec().then(() => {
-      console.log("Updated");
-    })
-    res.status(200).json({
-      message: "resullt saved"
-    })
-  })
+    res.send("Successful");
+  });
+
 });
 
+app.get("/:flow", (req, res) => {
+  Response.findOne({ "name": req.params.flow }).then(result => {
+    res.send(result);
+  });
+});
+
+function getAndSave(flow) {
+  return new Promise((resolve, reject) => {
+    let url = `https://4781b800.ngrok.io/${flow}`
+    request.get({ url: url, "name": flow }, (err, res) => {
+      let x = JSON.parse(res.body);
+      let name = `${flow}response`;
+      client.set(name, JSON.stringify(x.response), redis.print);
+      resolve();
+    });
+  });
+}
+
 function handleMessage(sender_psid, received_message) {
-  console.log("DHUkcey");
   getName(sender_psid).then(name => {
     console.log("name :", name);
     let response;
@@ -470,3 +481,14 @@ function callSendAPI(sender_psid, response) {
 app.listen(app.get('port'), () => {
   console.log('Server is listening');
 });
+
+/*
+Print All Keys in Redis
+          // client.keys('*', function (err, keys) {
+          //   if (err) return console.log(err);
+          
+          //   for(var i = 0, len = keys.length; i < len; i++) {
+          //     console.log(keys[i]);
+          //   }
+          // }); 
+*/

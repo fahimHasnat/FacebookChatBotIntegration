@@ -8,6 +8,9 @@ const divide = require("./controller/divideTheWork").type;
 const mongoose = require("mongoose");
 const Response = require("./models/response");
 const facebook = require('fb-messenger-bot-api');
+const gpflow = require('./test file/gpFlowTest').getFlow;
+const handleInput = require("./services/handleInput").handleInput;
+
 require('dotenv').config();
 const redis = require('redis');
 
@@ -95,16 +98,24 @@ app.post('/webhook', (req, res) => {
       // profileClient.setGetStartedAction(sender_psid, { "text": "Welcome to the jungle" });
       messageClient.markSeen(sender_psid)
         .then(() => {
-          client.get('GPresponse', (err, data) => {
+          client.hget('userInput', sender_psid, function(err, data){
             if (err || data == null) {
-              getAndSave("GP").then(()=>{
-                divide(JSON.parse(data), sender_psid, webhook_event);
-              });
+              divide(gpflow, sender_psid, webhook_event);
             } else {
-              // console.log(JSON.parse(data));
-              divide(JSON.parse(data), sender_psid, webhook_event);
+              let input = webhook_event.postback ? webhook_event.postback.title : webhook_event.message.text;
+              handleInput(gpflow, sender_psid, JSON.parse(data), input);
             }
-          })
+          });
+          // client.get('GPresponse', (err, data) => {
+          //   if (err || data == null) {
+          //     getAndSave("GP").then(()=>{
+          //       divide(JSON.parse(data), sender_psid, webhook_event);
+          //     });
+          //   } else {
+          //     divide(JSON.parse(data), sender_psid, webhook_event);
+          //   }
+          // });
+          // divide(gpflow, sender_psid, webhook_event);
         })
         .catch((err) => console.log(err));
     });
@@ -113,7 +124,6 @@ app.post('/webhook', (req, res) => {
   else {
     res.sendStatus(404);
   }
-
 });
 
 app.post("/create", (req, res) => {

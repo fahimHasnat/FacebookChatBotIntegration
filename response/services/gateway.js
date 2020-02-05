@@ -2,9 +2,9 @@
 const checkType = require("./checkType").checkType;
 const forwardings = require("./forwardings").forwardings;
 const getStarted = require("./getStarted").handleGetStarted;
-// const redis = require('redis');
+const redis = require('redis');
 
-// var client = redis.createClient();
+var client = redis.createClient();
 
 const functions = {
 
@@ -12,7 +12,10 @@ const functions = {
         checkType(sender_psid, responses[input.goto].find(item => item.id == input.id)).then(item => {
             console.log(item);
             if ("referred_to" in item && item.referred_to.goto === "Forwardings") {
-                forwardings(sender_psid, item.referred_to.goto, item.referred_to.id);
+                forwardings(responses, sender_psid, item.referred_to.goto, item.referred_to.id);
+            }
+            if ("referred_to" in item && item.referred_to.goto === "Inputs") {
+                client.hset("userInput", sender_psid, JSON.stringify(item.referred_to), redis.print);
             }
         });
     },
@@ -28,7 +31,8 @@ const functions = {
                 }
             } else {
                 Object.keys(responses["Default"]).forEach(item =>{
-                    forwardings(sender_psid,responses["Default"][item].goto,responses["Default"][item].id);
+                    console.log(responses["Default"][item].goto);
+                    forwardings(responses, sender_psid,responses["Default"][item].goto,responses["Default"][item].id);
                 });
             }
         });

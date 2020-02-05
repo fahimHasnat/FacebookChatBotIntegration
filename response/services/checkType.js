@@ -7,6 +7,7 @@ module.exports = {
     checkType: function (sender_psid, item) {
         // console.log("CheckType :",item);
         return new Promise((resolve, reject) => {
+            
             if (item.type == "button") {
                 let text = item.text;
                 let buttons = JSON.parse(JSON.stringify(item.buttons, ['type', 'title', 'payload']));

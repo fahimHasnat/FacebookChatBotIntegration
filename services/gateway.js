@@ -31,7 +31,7 @@ const functions = {
                 }
             } else {
                 Object.keys(responses["Default"]).forEach(item =>{
-                    console.log(responses["Default"][item].goto);
+                    // console.log(responses["Default"][item].goto);
                     forwardings(responses, sender_psid,responses["Default"][item].goto,responses["Default"][item].id);
                 });
             }

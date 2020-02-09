@@ -2,9 +2,11 @@
 const checkType = require("./checkType").checkType;
 const forwardings = require("./forwardings").forwardings;
 const getStarted = require("./getStarted").handleGetStarted;
+const url = require('url');
+var redisURL = url.parse(process.env.REDISCLOUD_URL);
 const redis = require('redis');
 
-var client = redis.createClient();
+var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
 
 const functions = {
 

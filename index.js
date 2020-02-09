@@ -116,8 +116,7 @@ app.post('/webhook', (req, res) => {
           //   }
           // });
           // divide(gpflow, sender_psid, webhook_event);
-        })
-        .catch((err) => console.log(err));
+        }).catch((err) => console.log(err));
     });
     res.status(200).send('EVENT_RECEIVED');
   }

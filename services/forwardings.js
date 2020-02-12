@@ -5,7 +5,7 @@ const checkType = require("./checkType").checkType;
 const functions = {
     forwardings : function(responses, sender_psid, goto, id) {
         checkType(sender_psid, responses[goto].find(item => item.id == id)).then(item => {
-            if (item.referred_to.goto === "Forwardings") {
+            if ("referred_to" in item && item.referred_to.goto === "Forwardings") {
                 functions.forwardings(responses, sender_psid, item.referred_to.goto, item.referred_to.id);
             }
             if ("referred_to" in item && item.referred_to.goto === "Inputs") {

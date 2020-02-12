@@ -1063,11 +1063,7 @@ responses = {
         {
             "id": 150, "type": "number",
             "conditions": {
-                "logic": {
-                    "and": [
-                        { "==": [{ "var": "length" }, 11] },
-                    ]
-                },
+                "logic": { "==": [{ "var": "length" }, 11] },
                 "regex": {
                     "expressions": {
                         "or": ["^017[0-9]", "^013[0-9]"]

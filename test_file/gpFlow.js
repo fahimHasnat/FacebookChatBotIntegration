@@ -499,10 +499,10 @@ responses = {
             {
                 id: 5,
                 referred_to: { goto: "Texts", id: 11 },
-                referred_by: 1,
+                depth: "Buttons+4+5",
                 "type": "postback",
                 "title": "Recharge",
-                "payload": "Texts+11"
+                "payload": "Texts+11" 
             },
             {
                 id: 6,

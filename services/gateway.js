@@ -2,11 +2,9 @@
 const checkType = require("./checkType").checkType;
 const forwardings = require("./forwardings").forwardings;
 const getStarted = require("./getStarted").handleGetStarted;
-const url = require('url');
-var redisURL = url.parse(process.env.REDISCLOUD_URL);
 const redis = require('redis');
 
-var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+var client = redis.createClient();
 
 const functions = {
 
@@ -27,14 +25,14 @@ const functions = {
             const result = responses["KeyValue"].find(item => item.key == input);
             if (result) {
                 if (result.value.goto === "Get Started") {
-                    getStarted(sender_psid).then(() => {
+                    getStarted(responses, sender_psid).then(() => {
                         resolve(true);
                     });
                 }
             } else {
-                Object.keys(responses["Default"]).forEach(item =>{
+                Object.keys(responses["Default"]).forEach(item => {
                     // console.log(responses["Default"][item].goto);
-                    forwardings(responses, sender_psid,responses["Default"][item].goto,responses["Default"][item].id);
+                    forwardings(responses, sender_psid, responses["Default"][item].goto, responses["Default"][item].id);
                 });
             }
         });
